@@ -1,0 +1,20 @@
+
+label.openEnded,
+label.multipleAnswer,
+label.trueFalse,
+label.multipleChoice {
+    margin-top: 15px;
+    display: block;
+    font-size: 1.2em;
+    margin-left: 15px;
+}
+
+textarea.openEnded,
+textarea.multipleAnswer,
+textarea.trueFalse,
+textarea.multipleChoice {
+    margin-top: 5px;
+    margin-left: 15px;
+    padding-right: 15px;
+    font-size: 1.2em;
+}

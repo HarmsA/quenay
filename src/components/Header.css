@@ -1,0 +1,16 @@
+
+header ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  color: #fff;
+  background-color: #7E31BC;
+}
+
+header ul li {
+  margin: 0;
+  padding: 10px;
+  cursor: pointer;
+}

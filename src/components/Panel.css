@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.swipeable {
+    flex: 1;
+    overflow: hidden;
+}
+
+.panels {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 300vw;
+    /* Mobile: Total width for 3 panels */
+}
+
+.panel {
+    width: 100vw;
+    /* Mobile: Each panel takes full viewport width */
+    height: 100%;
+}
+.panelGroup {
+  display: 'flex';
+  height: '100vh';
+  flex: 1;
+  padding: '20px';
+  /* boxSizing: 'border-box'; */
+  }
+/* Media query for desktop */
+@media (min-width: 768px) {
+    .panels {
+        /* display: flex; */
+        width: 100%;
+        /* Desktop: Container takes full width */
+        transform: none;
+        /* No transform needed */
+    }
+
+    .panel {
+        width: 33.33vw;
+        /* Desktop: Each panel takes one-third of the viewport width */
+    }
+}
