@@ -3,7 +3,7 @@ import React from 'react';
 const UpdateName = () => {
     return (
         <div>
-            <h2>Updatte Names</h2>
+            <h2>Update Names</h2>
         </div>
     );
 };

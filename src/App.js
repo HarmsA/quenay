@@ -8,30 +8,46 @@ import AddQuestion from './components/Panel2/AddQuestion';
 import HistoricQuestions from './components/Panel3/HistoricQuestions';
 import Names from './components/Panel1/Names';
 
-
 function App() {
-  const [activePanel, setActivePanel] = useState(0)
-  const [names, setNames] = useState([])
-  const [selectedName, setSelectedName] = useState('')
-  // const isMobile = window.innerWidth < 768;
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  
+  const [activePanel, setActivePanel] = useState(0);
+  const [names, setNames] = useState([]);
+  const [selectedName, setSelectedName] = useState('');
+  const [deviceType, setDeviceType] = useState('mobile');
 
   useEffect(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-        console.log(isMobile)
-        if (!isMobile) setActivePanel(0)
-      };
+    const updateDeviceType = () => {
+      const ua = navigator.userAgent;
+      const width = window.innerWidth;
 
-      window.addEventListener('resize', handleResize);
+      if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry/i.test(ua) || width < 768) {
+        setDeviceType("mobile");
+      } else if (/Tablet|iPad|Nexus 7|Nexus 10|KFAPWI/i.test(ua) || (width >= 768 && width < 1024)) {
+        setDeviceType("tablet");
+      } else {
+        setDeviceType("desktop");
+      }
+    };
+    updateDeviceType();
+    window.addEventListener('resize', updateDeviceType);
 
-      // Cleanup the event listener on component unmount
-      return () => {
-          window.removeEventListener('resize', handleResize);
-      };
-  }, [isMobile]);
+    return () => window.removeEventListener('resize', updateDeviceType);
+  }, []);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+        
+  //       setIsMobile(window.innerWidth < 852);
+  //       console.log(isMobile)
+  //       if (!isMobile) setActivePanel(0)
+  //     };
+
+  //     window.addEventListener('resize', handleResize);
+
+  //     // Cleanup the event listener on component unmount
+  //     return () => {
+  //         window.removeEventListener('resize', handleResize);
+  //     };
+  // }, [isMobile]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -41,38 +57,57 @@ function App() {
       if (activePanel > 0) setActivePanel(activePanel - 1);
     },
     trackMouse: true, // Allows swiping with a mouse on desktop
+    preventDefaultTouchmoveEvent: false, // Ensure that swipe does not prevent scrolling
   });
 
   const getTransformStyle = () => {
-    return isMobile ? { transform: `translateX(-${activePanel * 100}vw)` } : {};
-
+    return deviceType === 'mobile' ? { transform: `translateX(-${activePanel * 100}vw)` } : {};
   };
 
-  const handleSelectedName = (e) => { 
-    setSelectedName(e.target.innerText)
+  const handleSelectedName = (name) => { 
+    setSelectedName(prevSelectedName =>
+      prevSelectedName.trim().toLowerCase() === name.trim().toLowerCase() ? '' : name
+    );
     // todo - add a useEffect to get the selected name's questions from db and local storage and change the active panel to 1
-  }
+  };
 
+  useEffect(() => {
+        const storedNames = JSON.parse(localStorage.getItem('names'));
+        if (storedNames) {
+            setNames(storedNames);
+        }
+    }, []);
   
   return (
     <div className="App container">
-      {isMobile ?  <p>Mobile view</p> : <p>Desktop view</p> }
+      {deviceType === "mobile" ? (
+          <p>Mobile view</p>
+      ) : deviceType === "tablet" ? (
+          <p>Tablet view</p>
+      ) : (
+          <p>Desktop view</p>
+      )}
       <Header />
       <div {...handlers} style={styles.swipeable}>
       {/* <AddNames names={names} setNames={setNames} /> */}
       <div className="panels" style={getTransformStyle()}>
           
-        <Panel className='panel' >
-          <AddNames names={names} setNames={setNames} />
-          <Names names={names} handleSelectedName={handleSelectedName} selectedName={selectedName} />
+          <Panel >
+            <div className="panel">
+              <AddNames names={names} setNames={setNames} />
+              <Names names={names} handleSelectedName={handleSelectedName} selectedName={selectedName} />
+            </div>
         </Panel>
 
-        <Panel className='panel'>
-          <AddQuestion />
+          <Panel>
+            <div className="panel">
+            <AddQuestion />
+            </div>
         </Panel>
-
-        <Panel className='panel'>
-          <HistoricQuestions />
+          <Panel>
+            <div className="panel">
+              <HistoricQuestions />
+            </div>
         </Panel>
         
       </div>
@@ -91,16 +126,18 @@ const styles = {
   },
   swipeable: {
     flex: 1,
-    overflow: 'hidden',
+    overflow: 'hidden', // Prevents horizontal scroll
   },
   panels: {
     display: 'flex',
     width: '300vw',
     transition: 'transform 0.3s ease',
+    height: '100%',
   },
   panel: {
     width: '100vw',
     height: '100%',
+    overflow: 'auto',
   },
  '@media (min-width: 768px)': {
     panels: {
@@ -108,7 +145,7 @@ const styles = {
       width: '100%',
     },
     panel: {
-      width: '33.33vw', // Each panel takes up a third of the screen width
+      width: '32.9vw', // Each panel takes up a third of the screen width
     },
   },
 };

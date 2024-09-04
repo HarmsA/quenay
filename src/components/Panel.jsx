@@ -3,7 +3,7 @@ import './Panel.css';
 
 
 const Panel = ({ children }) => (
-  <div className='panelGroup'>
+  <div className='panel'>
     {children}
   </div>
 );

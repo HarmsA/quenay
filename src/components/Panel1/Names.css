@@ -1,0 +1,22 @@
+
+.selected {
+    font-weight: bold;
+}
+.nameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin: 10px;
+}
+.nameIcon {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+.iconContainer .edit,
+.iconContainer .delete,
+.iconContainer .bell {
+    cursor: pointer;
+    padding-right: 10px;
+}
