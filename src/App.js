@@ -33,22 +33,6 @@ function App() {
     return () => window.removeEventListener('resize', updateDeviceType);
   }, []);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-        
-  //       setIsMobile(window.innerWidth < 852);
-  //       console.log(isMobile)
-  //       if (!isMobile) setActivePanel(0)
-  //     };
-
-  //     window.addEventListener('resize', handleResize);
-
-  //     // Cleanup the event listener on component unmount
-  //     return () => {
-  //         window.removeEventListener('resize', handleResize);
-  //     };
-  // }, [isMobile]);
-
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (activePanel < 2) setActivePanel(activePanel + 1);
@@ -65,9 +49,9 @@ function App() {
   };
 
   const handleSelectedName = (name) => { 
-    setSelectedName(prevSelectedName =>
-      prevSelectedName.trim().toLowerCase() === name.trim().toLowerCase() ? '' : name
-    );
+  if (selectedName.trim().toLowerCase() !== name.trim().toLowerCase()) {
+    setSelectedName(name);
+  }
     // todo - add a useEffect to get the selected name's questions from db and local storage and change the active panel to 1
   };
 
@@ -92,22 +76,22 @@ function App() {
       {/* <AddNames names={names} setNames={setNames} /> */}
       <div className="panels" style={getTransformStyle()}>
           
-          <Panel >
-            <div className="panel">
-              <AddNames names={names} setNames={setNames} />
-              <Names names={names} handleSelectedName={handleSelectedName} selectedName={selectedName} />
-            </div>
+        <Panel >
+          <div className="panel">
+            <AddNames names={names} setNames={setNames} />
+            <Names names={names} handleSelectedName={handleSelectedName} selectedName={selectedName} />
+          </div>
         </Panel>
 
-          <Panel>
-            <div className="panel">
+        <Panel>
+          <div className="panel">
             <AddQuestion />
-            </div>
+          </div>
         </Panel>
-          <Panel>
-            <div className="panel">
-              <HistoricQuestions />
-            </div>
+        <Panel>
+          <div className="panel">
+            <HistoricQuestions />
+          </div>
         </Panel>
         
       </div>
